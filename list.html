@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>美国 / 全球市场 QDII 基金列表</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="site-nav" aria-label="主菜单">
+      <a class="brand-link" href="./index.html">QDII Monitor</a>
+      <div class="nav-links">
+        <a href="./index.html">卡片视图</a>
+        <a class="active" href="./list.html">列表视图</a>
+        <a href="./data/qdii-funds.csv">导出 CSV</a>
+      </div>
+    </nav>
+
+    <main class="shell list-shell">
+      <header class="topbar compact-topbar">
+        <div>
+          <p class="eyebrow">QDII Fund Monitor</p>
+          <h1>美国 / 全球市场 QDII 基金列表</h1>
+          <p class="subtitle">保留第一版的横向表格视图，方便快速比较收益率、限额、三项运作费率和申购状态。</p>
+        </div>
+        <div class="actions">
+          <a class="button" href="./index.html">卡片视图</a>
+          <a class="button muted" href="https://fund.eastmoney.com/data/fundranking.html" target="_blank" rel="noreferrer">数据源</a>
+        </div>
+      </header>
+
+      <section class="summary" aria-label="统计概览">
+        <div class="metric">
+          <span>目标基金总数</span>
+          <strong id="countAll">--</strong>
+        </div>
+        <div class="metric">
+          <span>纳指相关</span>
+          <strong id="countNasdaq">--</strong>
+        </div>
+        <div class="metric">
+          <span>标普相关</span>
+          <strong id="countSp">--</strong>
+        </div>
+        <div class="metric">
+          <span>场内 ETF</span>
+          <strong id="countEtf">--</strong>
+        </div>
+        <div class="metric">
+          <span>有限额</span>
+          <strong id="countLimited">--</strong>
+        </div>
+      </section>
+
+      <section class="list-controls" aria-label="筛选">
+        <label class="search">
+          <span>搜索</span>
+          <input id="searchInput" type="search" placeholder="代码、名称、拼音" />
+        </label>
+        <label>
+          <span>市场标签</span>
+          <select id="focusFilter"><option value="">全部</option></select>
+        </label>
+        <label>
+          <span>币种</span>
+          <select id="currencyFilter"><option value="">全部</option></select>
+        </label>
+        <label>
+          <span>交易场所</span>
+          <select id="venueFilter"><option value="">全部</option></select>
+        </label>
+        <label>
+          <span>申购状态</span>
+          <select id="statusFilter"><option value="">全部</option></select>
+        </label>
+        <label class="toggle">
+          <input id="limitOnly" type="checkbox" />
+          <span>仅看有限额</span>
+        </label>
+      </section>
+
+      <section class="table-wrap" aria-label="基金明细列表">
+        <div class="table-head">
+          <p id="resultCount">--</p>
+          <span>收益率单位：%；点击列标题可排序</span>
+        </div>
+        <div class="table-scroller">
+          <table class="fund-table">
+            <thead>
+              <tr>
+                <th data-sort="code">代码</th>
+                <th class="name-col" data-sort="name">基金名称</th>
+                <th data-sort="focus">标签</th>
+                <th data-sort="currency">币种</th>
+                <th data-sort="shareClass">类别</th>
+                <th class="num" data-sort="returns.oneYear">近1年</th>
+                <th class="num" data-sort="returns.threeYears">近3年</th>
+                <th class="num" data-sort="returns.fiveYears">近5年</th>
+                <th class="num" data-sort="returns.tenYears">近10年</th>
+                <th data-sort="fees.amounts.dailyPurchaseLimit">日限额</th>
+                <th>限额来源</th>
+                <th data-sort="fees.tradingStatus.purchase">申购状态</th>
+                <th>管理费</th>
+                <th>托管费</th>
+                <th>销售服务费</th>
+                <th>详情</th>
+              </tr>
+            </thead>
+            <tbody id="fundRows">
+              <tr>
+                <td colspan="16">正在读取数据...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <p id="meta" class="meta">正在读取数据...</p>
+      </footer>
+    </main>
+
+    <script src="./list.js?v=20260526-list-view" type="module"></script>
+  </body>
+</html>

@@ -10,8 +10,16 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <nav class="site-nav" aria-label="主菜单">
+      <a class="brand-link" href="./index.html">QDII Monitor</a>
+      <div class="nav-links">
+        <a href="./index.html">卡片视图</a>
+        <a href="./list.html">列表视图</a>
+        <a href="./data/qdii-funds.csv">导出 CSV</a>
+      </div>
+    </nav>
     <main class="shell">
-      <a class="back-link" href="./index.html">← 返回列表</a>
+      <a class="back-link" href="./index.html">← 返回卡片视图</a>
       <section id="detailPage" class="detail-page">
         <p class="meta">正在读取基金详情...</p>
       </section>

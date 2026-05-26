@@ -31,6 +31,59 @@ a {
   color: inherit;
 }
 
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 10px max(16px, calc((100vw - 1180px) / 2));
+  border-bottom: 1px solid var(--line);
+  background: rgba(244, 247, 251, 0.92);
+  backdrop-filter: blur(14px);
+}
+
+.brand-link {
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.nav-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 7px 12px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  border-color: rgba(31, 95, 191, 0.24);
+  background: var(--blue);
+  color: #fff;
+}
+
 .shell {
   width: min(1180px, calc(100vw - 32px));
   margin: 0 auto;
@@ -453,6 +506,139 @@ select:focus {
   font-size: 13px;
 }
 
+.list-shell {
+  width: min(1380px, calc(100vw - 32px));
+}
+
+.list-controls {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.6fr) repeat(4, minmax(130px, 0.7fr)) auto;
+  gap: 10px;
+  align-items: end;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.table-wrap {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  box-shadow: 0 6px 18px rgba(23, 32, 51, 0.05);
+}
+
+.table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 14px;
+}
+
+.table-head p,
+.table-head span {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.table-scroller {
+  overflow-x: auto;
+}
+
+.fund-table {
+  width: 100%;
+  min-width: 1320px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.fund-table th,
+.fund-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 11px 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.fund-table th {
+  background: #edf3fb;
+  color: #33415b;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.fund-table th[data-sort] {
+  cursor: pointer;
+}
+
+.fund-table tbody tr:hover {
+  background: var(--panel-2);
+}
+
+.fund-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.name-col {
+  min-width: 260px;
+}
+
+.name-col strong,
+.name-col small {
+  display: block;
+}
+
+.name-col small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.num {
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 800;
+}
+
+.code-link {
+  color: var(--blue);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 8px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.detail-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
 .back-link {
   display: inline-flex;
   margin: 0 0 16px;
@@ -574,6 +760,10 @@ select:focus {
     grid-template-columns: 1fr;
   }
 
+  .list-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .cards-layout {
     grid-template-columns: 1fr;
   }
@@ -596,6 +786,17 @@ select:focus {
 }
 
 @media (max-width: 560px) {
+  .site-nav {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   h1 {
     font-size: 24px;
   }
@@ -608,6 +809,10 @@ select:focus {
 
   .fund-card h2 {
     font-size: 17px;
+  }
+
+  .list-controls {
+    grid-template-columns: 1fr;
   }
 }
 
