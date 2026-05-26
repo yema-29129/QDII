@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>中国大陆 QDII 基金全量看板</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">QDII Fund Monitor</p>
+          <h1>美国 / 全球市场 QDII 基金看板</h1>
+          <p id="meta" class="meta">正在读取数据...</p>
+        </div>
+        <div class="actions">
+          <a class="button" href="./data/qdii-funds.csv">导出 CSV</a>
+          <a class="button muted" href="https://fund.eastmoney.com/data/fundranking.html" target="_blank" rel="noreferrer">数据源</a>
+        </div>
+      </header>
+
+      <section class="summary" aria-label="统计概览">
+        <div class="metric">
+          <span>目标基金总数</span>
+          <strong id="countAll">--</strong>
+        </div>
+        <div class="metric">
+          <span>纳指相关</span>
+          <strong id="countNasdaq">--</strong>
+        </div>
+        <div class="metric">
+          <span>标普相关</span>
+          <strong id="countSp">--</strong>
+        </div>
+        <div class="metric">
+          <span>场内 ETF</span>
+          <strong id="countEtf">--</strong>
+        </div>
+        <div class="metric">
+          <span>有限额</span>
+          <strong id="countLimited">--</strong>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="筛选">
+        <label class="search">
+          <span>搜索</span>
+          <input id="searchInput" type="search" placeholder="代码、名称、拼音" />
+        </label>
+        <label>
+          <span>市场标签</span>
+          <select id="focusFilter">
+            <option value="">全部</option>
+          </select>
+        </label>
+        <label>
+          <span>币种</span>
+          <select id="currencyFilter">
+            <option value="">全部</option>
+          </select>
+        </label>
+        <label>
+          <span>份额类别</span>
+          <select id="classFilter">
+            <option value="">全部</option>
+          </select>
+        </label>
+        <label>
+          <span>交易场所</span>
+          <select id="venueFilter">
+            <option value="">全部</option>
+          </select>
+        </label>
+        <label>
+          <span>申购状态</span>
+          <select id="statusFilter">
+            <option value="">全部</option>
+          </select>
+        </label>
+        <label class="toggle">
+          <input id="limitOnly" type="checkbox" />
+          <span>仅看有限额</span>
+        </label>
+      </section>
+
+      <section class="table-wrap" aria-label="基金列表">
+        <div class="table-head">
+          <p id="resultCount">--</p>
+          <p>收益率单位：%；“--”表示基金成立时间不足或源数据未披露。</p>
+        </div>
+        <div class="scroller">
+          <table>
+            <thead>
+              <tr>
+                <th data-sort="code">代码</th>
+                <th data-sort="name" class="name-col">基金名称</th>
+                <th data-sort="focus">标签</th>
+                <th data-sort="currency">币种</th>
+                <th data-sort="shareClass">类别</th>
+                <th data-sort="returns.oneYear" class="num">近1年</th>
+                <th data-sort="returns.threeYears" class="num">近3年</th>
+                <th data-sort="returns.fiveYears" class="num">近5年</th>
+                <th data-sort="returns.tenYears" class="num">近10年</th>
+                <th data-sort="fees.amounts.dailyPurchaseLimit">日限额</th>
+                <th data-sort="limitSource">限额来源</th>
+                <th data-sort="fees.tradingStatus.purchase">申购状态</th>
+                <th data-sort="fees.operatingFees.management">管理费</th>
+                <th data-sort="fees.operatingFees.custody">托管费</th>
+                <th data-sort="fees.operatingFees.salesService">销售服务费</th>
+                <th>详情</th>
+              </tr>
+            </thead>
+            <tbody id="fundRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js?v=20260526-limit-fix" type="module"></script>
+  </body>
+</html>
