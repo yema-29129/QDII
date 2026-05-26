@@ -197,10 +197,9 @@ select {
 }
 
 table {
-  width: 100%;
-  min-width: 0;
+  width: max-content;
   max-width: 100%;
-  table-layout: fixed;
+  table-layout: auto;
   border-collapse: collapse;
   font-size: 11px;
 }
@@ -208,12 +207,12 @@ table {
 th,
 td {
   border-bottom: 1px solid #edf1f6;
-  padding: 7px 6px;
+  padding: 6px 4px;
   text-align: left;
   vertical-align: top;
-  white-space: normal;
-  word-break: break-word;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
   line-height: 1.35;
 }
 
@@ -230,9 +229,11 @@ th {
 
 th.name-col,
 td.name-col {
-  min-width: 0;
-  width: auto;
+  width: 260px;
+  max-width: 260px;
   white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 td.num,
@@ -443,7 +444,7 @@ tbody tr:hover {
 }
 
 
-/* 强制全屏显示：不要横向滚动条 */
+/* 紧凑版：删除大块空白，同时不显示底部左右滚动条 */
 html,
 body {
   width: 100%;
@@ -451,32 +452,85 @@ body {
   overflow-x: hidden;
 }
 
+.shell {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 8px 10px 24px;
+}
+
 .table-wrap {
   width: 100%;
   max-width: 100%;
+  overflow: hidden;
+}
+
+.scroller {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: calc(100vh - 230px);
 }
 
 .scroller::-webkit-scrollbar:horizontal {
   display: none;
+  height: 0;
 }
 
-/* 16 列压进一个屏幕：重点列宽一点，辅助列窄一点 */
-th:nth-child(1), td:nth-child(1) { width: 4.8%; }
-th:nth-child(2), td:nth-child(2) { width: 18%; }
-th:nth-child(3), td:nth-child(3) { width: 4.2%; }
-th:nth-child(4), td:nth-child(4) { width: 4.2%; }
-th:nth-child(5), td:nth-child(5) { width: 4.2%; }
-th:nth-child(6), td:nth-child(6) { width: 4.8%; }
-th:nth-child(7), td:nth-child(7) { width: 4.8%; }
-th:nth-child(8), td:nth-child(8) { width: 4.8%; }
-th:nth-child(9), td:nth-child(9) { width: 4.8%; }
-th:nth-child(10), td:nth-child(10) { width: 5.8%; }
-th:nth-child(11), td:nth-child(11) { width: 15%; }
-th:nth-child(12), td:nth-child(12) { width: 5.8%; }
-th:nth-child(13), td:nth-child(13) { width: 5%; }
-th:nth-child(14), td:nth-child(14) { width: 5%; }
-th:nth-child(15), td:nth-child(15) { width: 5.8%; }
-th:nth-child(16), td:nth-child(16) { width: 3%; }
+/* 关键：表格不再强行铺满造成大空白，而是按内容紧凑排列；超过窗口时自动压缩换行 */
+table {
+  width: auto;
+  max-width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+
+th,
+td {
+  padding: 5px 3px;
+  white-space: nowrap;
+}
+
+/* 基金名称、限额来源是长文本，允许换行，其它短字段保持紧凑 */
+th:nth-child(2),
+td:nth-child(2) {
+  width: 250px;
+  max-width: 250px;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+th:nth-child(11),
+td:nth-child(11) {
+  width: 260px;
+  max-width: 260px;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* 短字段只给内容需要的宽度，避免一列占一大块空白 */
+th:nth-child(1), td:nth-child(1) { width: 56px; }
+th:nth-child(3), td:nth-child(3) { width: 44px; text-align: center; }
+th:nth-child(4), td:nth-child(4) { width: 44px; text-align: center; }
+th:nth-child(5), td:nth-child(5) { width: 42px; text-align: center; }
+th:nth-child(6), td:nth-child(6),
+th:nth-child(7), td:nth-child(7),
+th:nth-child(8), td:nth-child(8),
+th:nth-child(9), td:nth-child(9) { width: 58px; }
+th:nth-child(10), td:nth-child(10) { width: 64px; }
+th:nth-child(12), td:nth-child(12) { width: 58px; text-align: center; }
+th:nth-child(13), td:nth-child(13),
+th:nth-child(14), td:nth-child(14),
+th:nth-child(15), td:nth-child(15) { width: 78px; }
+th:nth-child(16), td:nth-child(16) { width: 44px; text-align: center; }
+
+td.num,
+th.num {
+  text-align: right;
+}
 
 .tag {
   padding: 1px 5px;
@@ -486,7 +540,7 @@ th:nth-child(16), td:nth-child(16) { width: 3%; }
 .detail-btn {
   min-height: 24px;
   padding: 3px 6px;
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .site-footer {
@@ -505,8 +559,12 @@ th:nth-child(16), td:nth-child(16) { width: 3%; }
   line-height: 1.7;
 }
 
-@media (max-width: 1200px) {
-  table { font-size: 10px; }
-  th, td { padding: 6px 4px; }
-  .tag { font-size: 9px; padding: 1px 4px; }
+@media (max-width: 1400px) {
+  table { font-size: 9px; }
+  th, td { padding: 4px 2px; }
+  th:nth-child(2), td:nth-child(2) { width: 210px; max-width: 210px; }
+  th:nth-child(11), td:nth-child(11) { width: 220px; max-width: 220px; }
+  th:nth-child(13), td:nth-child(13),
+  th:nth-child(14), td:nth-child(14),
+  th:nth-child(15), td:nth-child(15) { width: 68px; }
 }
