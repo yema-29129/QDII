@@ -610,3 +610,148 @@ select:focus {
     font-size: 17px;
   }
 }
+
+/* 2026-05-26 layout patch: top horizontal categories + 3 cards per row */
+.cards-layout {
+  display: block;
+}
+
+.category-panel {
+  position: static;
+  top: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(23, 32, 51, 0.05);
+}
+
+.category-title {
+  flex: 0 0 auto;
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-btn {
+  width: auto;
+  min-width: 96px;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.category-btn strong {
+  min-width: 26px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+.fund-cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.fund-card {
+  min-height: 154px;
+  border-radius: 16px;
+  padding: 12px 13px;
+}
+
+.card-topline {
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.code {
+  font-size: 12px;
+}
+
+.pill,
+.status {
+  min-height: 20px;
+  padding: 2px 7px;
+  font-size: 11px;
+}
+
+.fund-card h2 {
+  margin-bottom: 10px;
+  min-height: 46px;
+  font-size: 16px;
+  line-height: 1.42;
+}
+
+.card-metrics {
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.card-metrics div {
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.card-metrics span {
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.card-metrics strong {
+  font-size: 17px;
+}
+
+.card-foot {
+  padding-top: 9px;
+  font-size: 12px;
+}
+
+.cards-head strong {
+  font-size: 18px;
+}
+
+.cards-head p,
+.cards-head span {
+  font-size: 12px;
+}
+
+@media (max-width: 1100px) {
+  .fund-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .category-panel {
+    display: block;
+  }
+
+  .category-title {
+    margin-bottom: 9px;
+  }
+
+  .category-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .category-btn {
+    width: 100%;
+  }
+
+  .fund-cards {
+    grid-template-columns: 1fr;
+  }
+}
