@@ -568,3 +568,205 @@ th.num {
   th:nth-child(14), td:nth-child(14),
   th:nth-child(15), td:nth-child(15) { width: 68px; }
 }
+
+/* 最终修正版：上方区域跟随表格内容宽度，不再铺满整屏；正文比上一版大 1 号 */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-size: 14px;
+}
+
+.shell {
+  display: inline-block;
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 8px 10px 24px;
+}
+
+.topbar,
+.summary,
+.controls,
+.table-wrap,
+.site-footer {
+  width: 100%;
+  max-width: 100%;
+}
+
+.topbar {
+  margin-bottom: 10px;
+  gap: 14px;
+}
+
+h1 {
+  font-size: 28px;
+  line-height: 1.15;
+}
+
+.eyebrow {
+  margin-bottom: 4px;
+  font-size: 10px;
+}
+
+.actions .button,
+.actions button {
+  min-height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.summary {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.metric {
+  padding: 10px 12px;
+}
+
+.metric span {
+  font-size: 11px;
+}
+
+.metric strong {
+  margin-top: 5px;
+  font-size: 22px;
+}
+
+.controls {
+  grid-template-columns: 280px repeat(5, 130px) 110px;
+  gap: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+label span {
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+
+input,
+select {
+  height: 32px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.toggle {
+  height: 32px;
+  font-size: 12px;
+}
+
+.table-head {
+  padding: 9px 10px;
+  font-size: 12px;
+}
+
+.scroller {
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+}
+
+table {
+  width: auto;
+  max-width: none;
+  table-layout: auto;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+th,
+td {
+  padding: 6px 4px;
+  white-space: nowrap;
+  line-height: 1.35;
+}
+
+th {
+  font-size: 11px;
+}
+
+/* 长文本列给必要宽度，短字段只占内容宽度，避免大块空白 */
+th:nth-child(1), td:nth-child(1) { width: 58px; }
+th:nth-child(2), td:nth-child(2) {
+  width: 300px;
+  max-width: 300px;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+th:nth-child(3), td:nth-child(3) { width: 44px; text-align: center; }
+th:nth-child(4), td:nth-child(4) { width: 46px; text-align: center; }
+th:nth-child(5), td:nth-child(5) { width: 50px; text-align: center; }
+th:nth-child(6), td:nth-child(6),
+th:nth-child(7), td:nth-child(7),
+th:nth-child(8), td:nth-child(8),
+th:nth-child(9), td:nth-child(9) { width: 60px; }
+th:nth-child(10), td:nth-child(10) { width: 62px; }
+th:nth-child(11), td:nth-child(11) {
+  width: 310px;
+  max-width: 310px;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+th:nth-child(12), td:nth-child(12) { width: 62px; text-align: center; }
+th:nth-child(13), td:nth-child(13),
+th:nth-child(14), td:nth-child(14),
+th:nth-child(15), td:nth-child(15) { width: 84px; }
+th:nth-child(16), td:nth-child(16) { width: 46px; text-align: center; }
+
+.tag {
+  padding: 2px 6px;
+  font-size: 11px;
+}
+
+.detail-btn {
+  min-height: 26px;
+  padding: 3px 7px;
+  font-size: 11px;
+}
+
+.site-footer {
+  margin-top: 8px;
+  padding: 10px 12px;
+}
+
+.site-footer .meta {
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+@media (max-width: 1500px) {
+  .controls {
+    grid-template-columns: 240px repeat(5, 110px) 96px;
+  }
+
+  table {
+    font-size: 10.5px;
+  }
+
+  th {
+    font-size: 10.5px;
+  }
+
+  th,
+  td {
+    padding: 5px 3px;
+  }
+
+  th:nth-child(2), td:nth-child(2) { width: 270px; max-width: 270px; }
+  th:nth-child(11), td:nth-child(11) { width: 270px; max-width: 270px; }
+  th:nth-child(13), td:nth-child(13),
+  th:nth-child(14), td:nth-child(14),
+  th:nth-child(15), td:nth-child(15) { width: 76px; }
+}
