@@ -770,3 +770,139 @@ th:nth-child(16), td:nth-child(16) { width: 46px; text-align: center; }
   th:nth-child(14), td:nth-child(14),
   th:nth-child(15), td:nth-child(15) { width: 76px; }
 }
+
+/* 2026-05-26 居中版：去掉右侧大空白，整体按表格宽度居中显示 */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg);
+}
+
+.shell {
+  display: block !important;
+  width: min(1400px, calc(100vw - 20px)) !important;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: 8px 0 24px !important;
+}
+
+.topbar,
+.summary,
+.controls,
+.table-wrap,
+.site-footer {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.topbar {
+  align-items: flex-end;
+  margin-bottom: 10px !important;
+}
+
+.summary {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+.controls {
+  grid-template-columns: minmax(220px, 1.35fr) repeat(5, minmax(96px, 0.72fr)) minmax(92px, 0.55fr) !important;
+}
+
+.table-wrap {
+  overflow: hidden !important;
+}
+
+.scroller {
+  width: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+table {
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  font-size: 12px !important;
+}
+
+th,
+td {
+  padding: 7px 4px !important;
+  line-height: 1.35 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+th {
+  font-size: 12px !important;
+}
+
+/* 两个长文本列允许换行，其余列紧凑显示 */
+th:nth-child(2),
+td:nth-child(2),
+th:nth-child(11),
+td:nth-child(11) {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+/* 16列宽度总和约等于100%，避免任何一列把右侧撑出大空白 */
+th:nth-child(1), td:nth-child(1) { width: 4.4% !important; }
+th:nth-child(2), td:nth-child(2) { width: 20% !important; max-width: none !important; }
+th:nth-child(3), td:nth-child(3) { width: 3.6% !important; text-align: center; }
+th:nth-child(4), td:nth-child(4) { width: 3.7% !important; text-align: center; }
+th:nth-child(5), td:nth-child(5) { width: 3.6% !important; text-align: center; }
+th:nth-child(6), td:nth-child(6),
+th:nth-child(7), td:nth-child(7),
+th:nth-child(8), td:nth-child(8),
+th:nth-child(9), td:nth-child(9) { width: 3.9% !important; }
+th:nth-child(10), td:nth-child(10) { width: 4.6% !important; }
+th:nth-child(11), td:nth-child(11) { width: 20% !important; max-width: none !important; }
+th:nth-child(12), td:nth-child(12) { width: 5.1% !important; text-align: center; }
+th:nth-child(13), td:nth-child(13) { width: 4.9% !important; }
+th:nth-child(14), td:nth-child(14) { width: 4.9% !important; }
+th:nth-child(15), td:nth-child(15) { width: 5.6% !important; }
+th:nth-child(16), td:nth-child(16) { width: 3.9% !important; text-align: center; }
+
+.tag {
+  font-size: 11px !important;
+}
+
+.detail-btn {
+  font-size: 11px !important;
+}
+
+@media (max-width: 1200px) {
+  .shell {
+    width: calc(100vw - 12px) !important;
+  }
+
+  table {
+    font-size: 11px !important;
+  }
+
+  th {
+    font-size: 11px !important;
+  }
+
+  th,
+  td {
+    padding: 6px 3px !important;
+  }
+
+  .controls {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
