@@ -1,8 +1,7 @@
 const state = {
   funds: [],
   filtered: [],
-  sortKey: "focus",
-  sortDir: "asc",
+  activeFocus: "",
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -27,13 +26,17 @@ function loadJson(url) {
   });
 }
 
-function getValue(obj, path) {
-  return path.split(".").reduce((acc, key) => (acc == null ? acc : acc[key]), obj);
+function escapeHtml(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
 }
 
 function formatPercent(value) {
   if (value === null || value === undefined || Number.isNaN(value)) return "--";
-  return Number(value).toFixed(2);
+  return `${Number(value).toFixed(2)}%`;
 }
 
 function percentClass(value) {
@@ -43,20 +46,18 @@ function percentClass(value) {
 
 function hasLimit(fund) {
   const text = fund.fees?.amounts?.dailyPurchaseLimit || "";
-  return text && !/无限额|---/.test(text);
+  return text && !/无限额|---|^--$/.test(text);
 }
 
-function statusTag(status) {
-  const cls = /暂停|停止/.test(status) ? "stop" : /限/.test(status) ? "warn" : "";
-  return `<span class="tag ${cls}">${status || "--"}</span>`;
+function statusClass(status = "") {
+  if (/暂停|停止|封闭/.test(status)) return "stop";
+  if (/限/.test(status)) return "warn";
+  return "open";
 }
 
-function escapeHtml(value = "") {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+function focusOrder(focus) {
+  const order = { 纳指: 0, 标普: 1, 美国: 2, 全球: 3, 港股: 4, 商品: 5, 黄金: 6, REIT: 7, 其他: 99 };
+  return order[focus] ?? 50;
 }
 
 function fillSelect(selector, values) {
@@ -77,26 +78,40 @@ function renderSummary(payload) {
   $("#meta").textContent = `更新：${new Date(payload.generatedAt).toLocaleString("zh-CN")}；数据日期：${payload.date}；来源：东方财富/天天基金公开数据。${payload.note}`;
 }
 
-function compareFunds(a, b) {
-  const av = getValue(a, state.sortKey);
-  const bv = getValue(b, state.sortKey);
-  const dir = state.sortDir === "asc" ? 1 : -1;
-  if (state.sortKey === "focus") {
-    const order = { 纳指: 0, 标普: 1, 美国: 2, 全球: 3 };
-    return ((order[av] ?? 9) - (order[bv] ?? 9) || a.code.localeCompare(b.code)) * dir;
-  }
-  const an = Number(String(av ?? "").replace(/[^\d.-]/g, ""));
-  const bn = Number(String(bv ?? "").replace(/[^\d.-]/g, ""));
-  if (Number.isFinite(an) && Number.isFinite(bn)) return (an - bn) * dir;
-  return String(av ?? "").localeCompare(String(bv ?? ""), "zh-CN") * dir;
+function getCategoryCounts() {
+  const counts = new Map();
+  state.funds.forEach((fund) => {
+    const key = fund.focus || "其他";
+    counts.set(key, (counts.get(key) || 0) + 1);
+  });
+  return [...counts.entries()].sort((a, b) => focusOrder(a[0]) - focusOrder(b[0]) || a[0].localeCompare(b[0], "zh-CN"));
+}
+
+function renderCategories() {
+  const categories = [["", "全部", state.funds.length], ...getCategoryCounts().map(([name, count]) => [name, name, count])];
+  $("#categoryList").innerHTML = categories
+    .map(([value, label, count]) => {
+      const active = state.activeFocus === value ? "active" : "";
+      return `<button class="category-btn ${active}" type="button" data-focus="${escapeHtml(value)}">
+        <span>${escapeHtml(label)}</span>
+        <strong>${count}</strong>
+      </button>`;
+    })
+    .join("");
+}
+
+function sortCards(a, b) {
+  const focusDiff = focusOrder(a.focus) - focusOrder(b.focus);
+  if (focusDiff !== 0) return focusDiff;
+  const ar = Number(a.returns?.oneYear ?? -9999);
+  const br = Number(b.returns?.oneYear ?? -9999);
+  if (Number.isFinite(ar) && Number.isFinite(br) && ar !== br) return br - ar;
+  return a.code.localeCompare(b.code);
 }
 
 function applyFilters() {
   const query = $("#searchInput").value.trim().toLowerCase();
-  const focus = $("#focusFilter").value;
   const currency = $("#currencyFilter").value;
-  const shareClass = $("#classFilter").value;
-  const venue = $("#venueFilter").value;
   const status = $("#statusFilter").value;
   const limited = $("#limitOnly").checked;
 
@@ -105,72 +120,75 @@ function applyFilters() {
       const haystack = `${fund.code} ${fund.name} ${fund.pinyin}`.toLowerCase();
       return !query || haystack.includes(query);
     })
-    .filter((fund) => !focus || fund.focus === focus)
+    .filter((fund) => !state.activeFocus || fund.focus === state.activeFocus)
     .filter((fund) => !currency || fund.currency === currency)
-    .filter((fund) => !shareClass || fund.shareClass === shareClass)
-    .filter((fund) => !venue || fund.tradingVenue === venue)
     .filter((fund) => !status || fund.fees.tradingStatus.purchase === status)
     .filter((fund) => !limited || hasLimit(fund))
-    .sort(compareFunds);
+    .sort(sortCards);
 
-  renderTable();
+  renderCategories();
+  renderCards();
 }
 
-function renderTable() {
+function renderCards() {
+  const title = state.activeFocus ? `${state.activeFocus}相关基金` : "全部基金";
+  $("#activeCategoryTitle").textContent = title;
   $("#resultCount").textContent = `当前显示 ${state.filtered.length} / ${state.funds.length} 只基金`;
-  $("#fundRows").innerHTML = state.filtered
-    .map(
-      (fund) => `
-        <tr>
-          <td><a href="${fund.links.fund}" target="_blank" rel="noreferrer">${fund.code}</a></td>
-          <td class="name-col">${escapeHtml(fund.name)}</td>
-          <td><span class="tag">${escapeHtml(fund.focus)}</span></td>
-          <td>${escapeHtml(fund.currency)}</td>
-          <td>${escapeHtml(fund.shareClass)}</td>
-          <td class="num ${percentClass(fund.returns.oneYear)}">${formatPercent(fund.returns.oneYear)}</td>
-          <td class="num ${percentClass(fund.returns.threeYears)}">${formatPercent(fund.returns.threeYears)}</td>
-          <td class="num ${percentClass(fund.returns.fiveYears)}">${formatPercent(fund.returns.fiveYears)}</td>
-          <td class="num ${percentClass(fund.returns.tenYears)}">${formatPercent(fund.returns.tenYears)}</td>
-          <td>${escapeHtml(fund.fees.amounts.dailyPurchaseLimit || "--")}</td>
-          <td>${fund.limitSourceUrl ? `<a href="${fund.limitSourceUrl}" target="_blank" rel="noreferrer">${escapeHtml(fund.limitSource || "--")}</a>` : escapeHtml(fund.limitSource || "--")}</td>
-          <td>${statusTag(fund.fees.tradingStatus.purchase)}</td>
-          <td>${escapeHtml(fund.fees.operatingFees.management || "--")}</td>
-          <td>${escapeHtml(fund.fees.operatingFees.custody || "--")}</td>
-          <td>${escapeHtml(fund.fees.operatingFees.salesService || "--")}</td>
-          <td><a class="detail-btn button muted" href="./detail.html?code=${fund.code}">查看</a></td>
-        </tr>
-      `,
-    )
+
+  if (!state.filtered.length) {
+    $("#fundCards").innerHTML = `<div class="empty-card">没有找到符合条件的基金，换一个分类或关键词试试。</div>`;
+    return;
+  }
+
+  $("#fundCards").innerHTML = state.filtered
+    .map((fund) => {
+      const purchaseStatus = fund.fees?.tradingStatus?.purchase || "--";
+      const limit = fund.fees?.amounts?.dailyPurchaseLimit || "--";
+      return `<a class="fund-card" href="./detail.html?code=${encodeURIComponent(fund.code)}" aria-label="查看 ${escapeHtml(fund.name)} 详情">
+        <div class="card-topline">
+          <span class="code">${escapeHtml(fund.code)}</span>
+          <span class="pill">${escapeHtml(fund.focus || "其他")}</span>
+          <span class="pill light">${escapeHtml(fund.currency || "--")}</span>
+          <span class="status ${statusClass(purchaseStatus)}">${escapeHtml(purchaseStatus)}</span>
+        </div>
+        <h2>${escapeHtml(fund.name)}</h2>
+        <div class="card-metrics">
+          <div>
+            <span>近一年</span>
+            <strong class="${percentClass(fund.returns?.oneYear)}">${formatPercent(fund.returns?.oneYear)}</strong>
+          </div>
+          <div>
+            <span>限购金额</span>
+            <strong>${escapeHtml(limit)}</strong>
+          </div>
+        </div>
+        <div class="card-foot">
+          <span>${escapeHtml(fund.tradingVenue || "--")} · ${escapeHtml(fund.shareClass || "--")}</span>
+          <em>查看详情 →</em>
+        </div>
+      </a>`;
+    })
     .join("");
 }
 
 function bindEvents() {
-  ["#searchInput", "#focusFilter", "#currencyFilter", "#classFilter", "#venueFilter", "#statusFilter", "#limitOnly"].forEach((selector) => {
+  ["#searchInput", "#currencyFilter", "#statusFilter", "#limitOnly"].forEach((selector) => {
     $(selector).addEventListener("input", applyFilters);
   });
 
-  document.querySelector("thead").addEventListener("click", (event) => {
-    const key = event.target.dataset.sort;
-    if (!key) return;
-    if (state.sortKey === key) {
-      state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
-    } else {
-      state.sortKey = key;
-      state.sortDir = key.includes("returns") ? "desc" : "asc";
-    }
+  $("#categoryList").addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-focus]");
+    if (!button) return;
+    state.activeFocus = button.dataset.focus;
     applyFilters();
   });
-
 }
 
 async function init() {
   const payload = await loadJson("./data/qdii-funds.json");
   if (!payload?.funds) throw new Error("数据文件缺少 funds 字段");
   state.funds = payload.funds;
-  fillSelect("#focusFilter", state.funds.map((fund) => fund.focus));
   fillSelect("#currencyFilter", state.funds.map((fund) => fund.currency));
-  fillSelect("#classFilter", state.funds.map((fund) => fund.shareClass));
-  fillSelect("#venueFilter", state.funds.map((fund) => fund.tradingVenue));
   fillSelect("#statusFilter", state.funds.map((fund) => fund.fees.tradingStatus.purchase));
   renderSummary(payload);
   bindEvents();
