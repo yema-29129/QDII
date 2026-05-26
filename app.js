@@ -131,12 +131,12 @@ function renderTable() {
           <td class="num ${percentClass(fund.returns.threeYears)}">${formatPercent(fund.returns.threeYears)}</td>
           <td class="num ${percentClass(fund.returns.fiveYears)}">${formatPercent(fund.returns.fiveYears)}</td>
           <td class="num ${percentClass(fund.returns.tenYears)}">${formatPercent(fund.returns.tenYears)}</td>
-          <td class="limit-col">${escapeHtml(fund.fees.amounts.dailyPurchaseLimit || "--")}</td>
-          <td class="source-col">${fund.limitSourceUrl ? `<a href="${fund.limitSourceUrl}" target="_blank" rel="noreferrer">${escapeHtml(fund.limitSource || "--")}</a>` : escapeHtml(fund.limitSource || "--")}</td>
-          <td class="status-col">${statusTag(fund.fees.tradingStatus.purchase)}</td>
-          <td class="fee-col">${escapeHtml(fund.fees.operatingFees.management || "--")}</td>
-          <td class="fee-col">${escapeHtml(fund.fees.operatingFees.custody || "--")}</td>
-          <td class="fee-col">${escapeHtml(fund.fees.operatingFees.salesService || "--")}</td>
+          <td>${escapeHtml(fund.fees.amounts.dailyPurchaseLimit || "--")}</td>
+          <td>${fund.limitSourceUrl ? `<a href="${fund.limitSourceUrl}" target="_blank" rel="noreferrer">${escapeHtml(fund.limitSource || "--")}</a>` : escapeHtml(fund.limitSource || "--")}</td>
+          <td>${statusTag(fund.fees.tradingStatus.purchase)}</td>
+          <td>${escapeHtml(fund.fees.operatingFees.management || "--")}</td>
+          <td>${escapeHtml(fund.fees.operatingFees.custody || "--")}</td>
+          <td>${escapeHtml(fund.fees.operatingFees.salesService || "--")}</td>
           <td><a class="detail-btn button muted" href="./detail.html?code=${fund.code}">查看</a></td>
         </tr>
       `,
